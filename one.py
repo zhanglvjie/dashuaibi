@@ -1,16 +1,24 @@
-#include<stdio.h>
-data = input("输入各个科目成绩")
-data ={}
-while data:
-    t=data.split()
-    data[t[0]]=t[1]
-    data = input()
-ls=list(data.items())
-ls.sort(key=lambda x:x[1],reverse=True)
-s1,g1=ls[0]
-s2,g2=ls[len(ls)-1]
-a=0
-for i in data.values():
-    a=a+int(i)
-a=a/len(ls)
-print("最高分课程是{}{},最低分课程是{}{},平均分是{:.2f}",format(s1,g1,s2,g2,a))
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind(('127.0.0.1',8888))
+s.listen(1)
+filename = 'D:/one.txt'
+print('I want to get the file %s!' % filename)
+s.send(filename.encode('utf-8'))
+str1 = s.recv(1024)
+str2 = str1.decode('utf-8')
+if str2=='no':
+ print('To get the file %s is failed!' % filename)
+else:
+ s.send(b'I am ready!')
+ temp=filename.split('/')
+ myname = 'my_' + temp[len(temp)-1]
+ size=1024
+ with open(myname,'wb') as f:
+ while True:
+ data = s.recv(size)
+ f.write(data)
+ if len(data)<size:
+ break
+ print('The downloaded file is %s.' % myname)
+s.close()
